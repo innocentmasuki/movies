@@ -1,25 +1,27 @@
-import "./App.css";
-import Counter from "./components/Counter/Counter.tsx";
-import { useAppSelector } from "./hooks/storeHooks.ts";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Home from "@/pages/Home.tsx";
+import { fetchMovieByIMDBID, fetchMovies } from "@/api/movieSdk.ts";
+import Movie from "@/pages/Movie.tsx";
+import { MovieData } from "@/types";
 
-function App() {
-  const count = useAppSelector((state) => state.counter.value);
+const App = () => {
+  const router = createBrowserRouter([
+    {
+      path: "/",
+      element: <Home />,
+      errorElement: <div>error</div>,
+      loader: () => fetchMovies(),
+    },
+    {
+      path: ":movie",
+      element: <Movie />,
+      loader: async ({ params }): Promise<MovieData> =>
+        fetchMovieByIMDBID(params.movie as `${"tt"}${number}`),
+    },
+  ]);
+
   return (
-    <div>
-      <div>
-        <div>
-          <div>
-            <h1>The count is {count} </h1>
-          </div>
-        </div>
-        <div>
-          <div>
-            <Counter />
-          </div>
-        </div>
-      </div>
-    </div>
+    <RouterProvider router={router} fallbackElement={<div>Loading...</div>} />
   );
-}
-
+};
 export default App;
