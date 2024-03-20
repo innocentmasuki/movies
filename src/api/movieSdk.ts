@@ -1,7 +1,7 @@
 import { MovieData } from "@/types/index.ts";
 import { BASE_URL } from "@/constants";
 
-export const fetchMovies = async (): Promise<MovieData[]> => {
+export const getMovies = async (): Promise<MovieData[]> => {
   const response = await fetch(
     `${BASE_URL}?s=three&apikey=bbb23874&type=movie`,
   );
@@ -26,13 +26,30 @@ export const searchMovie = async (query: string): Promise<MovieData[]> => {
   throw new Error("Error fetching data");
 };
 
-export const fetchMovieByIMDBID = async (
+export const getMovieByIMDBID = async (
   imdbID: `${"tt"}${number}`,
+  type = "movie",
 ): Promise<MovieData> => {
   if (!imdbID) throw new Error("IMDB ID is required");
   if (!imdbID.startsWith("tt")) throw new Error("Invalid IMDB ID");
   const response = await fetch(
-    `${BASE_URL}?i=${imdbID}&apikey=bbb23874&type=movie`,
+    `${BASE_URL}?i=${imdbID}&apikey=bbb23874&type=${type}&plot=full`,
+  );
+  const data = await response.json();
+  if (Object.keys(data).length > 0) {
+    return data;
+  }
+  throw new Error("Error fetching data");
+};
+
+export const getMovieTrailerByIMDBID = async (
+  imdbID: `${"tt"}${number}`,
+  type = "movie",
+): Promise<MovieData> => {
+  if (!imdbID) throw new Error("IMDB ID is required");
+  if (!imdbID.startsWith("tt")) throw new Error("Invalid IMDB ID");
+  const response = await fetch(
+    `${BASE_URL}?i=${imdbID}&apikey=bbb23874&type=${type}&plot=full`,
   );
   const data = await response.json();
   if (Object.keys(data).length > 0) {

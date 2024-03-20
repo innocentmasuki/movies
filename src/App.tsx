@@ -1,6 +1,6 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Home from "@/pages/Home.tsx";
-import { fetchMovieByIMDBID, fetchMovies } from "@/api/movieSdk.ts";
+import { getMovieByIMDBID, getMovies } from "@/api/movieSdk.ts";
 import Movie from "@/pages/Movie.tsx";
 import { MovieData } from "@/types";
 
@@ -10,13 +10,13 @@ const App = () => {
       path: "/",
       element: <Home />,
       errorElement: <div>error</div>,
-      loader: () => fetchMovies(),
+      loader: () => getMovies(),
     },
     {
       path: ":movie",
       element: <Movie />,
       loader: async ({ params }): Promise<MovieData> =>
-        fetchMovieByIMDBID(params.movie as `${"tt"}${number}`),
+        getMovieByIMDBID(params.movie as `${"tt"}${number}`),
     },
   ]);
 
