@@ -6,7 +6,7 @@ import { setSearchQuery } from "@/redux/slices/searchQuerySlice.ts";
 import { getMovies } from "@/api/movieSdk.ts";
 import { setMovies } from "@/redux/slices/moviesSlice.ts";
 import { getAvailableBrightest, loadImage } from "@/utils/getDominantColor.ts";
-// @ts-ignore
+// @ts-expect-error
 import ColorThief from "colorthief";
 
 function Home() {
@@ -32,11 +32,9 @@ function Home() {
         if (index !== hoveredItem) return;
         loadImage(movie.Poster).then((img) => {
           const c = colorThief.getPalette(img, 30);
-          const rgb = getAvailableBrightest(c).join(", ");
+          const rgb = getAvailableBrightest(c, 10).join(", ");
           // @ts-ignore
-          setBackgroundColor(
-            `radial-gradient( rgba(${rgb}, 0.5) , rgba(${rgb}, 0) , rgba(${rgb}, 0))`,
-          );
+          setBackgroundColor(`radial-gradient(rgba(${rgb}, 0.5))`);
         });
       });
 
@@ -90,7 +88,7 @@ function Home() {
           ></input>
         </div>
         <div
-          className={"w-full gap-3 grid grid-cols-1 md:grid-cols-2"}
+          className={"w-full gap-3 grid py-4 grid-cols-1 md:grid-cols-2"}
           onMouseMove={handleMouseMove}
         >
           {movies.length > 0 &&
@@ -101,7 +99,7 @@ function Home() {
                     onMouseEnter={() => setHoveredItem(index)}
                     onMouseLeave={() => setHoveredItem(null)}
                     className={
-                      "flex flex-row glass w-full overflow-hidden  gap-3 justify-start grid-item "
+                      "flex flex-row bg-white/20  border-[2px] border-white/20 backdrop-blur rounded-xl w-full overflow-hidden  gap-3 justify-start  group"
                     }
                   >
                     <img
@@ -115,7 +113,7 @@ function Home() {
                       //   backgroundImage: `radial-gradient(${color1}, ${color2}, ${color3})`,
                       // }}
                       style={{ backgroundImage }}
-                      className="shiny-overlay h-[600px] aspect-square  rounded-full"
+                      className="group-hover:opacity-100 opacity-0 absolute h-[600px] aspect-square  rounded-full"
                       ref={index === hoveredItem ? shinyRef : null}
                     />
                   </div>
