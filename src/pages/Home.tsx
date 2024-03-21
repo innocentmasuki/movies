@@ -17,17 +17,28 @@ function Home() {
   const searchQuery = useAppSelector((state) => state.searchQuery.value);
   const movies = useAppSelector((state) => state.movies.value);
   const searchQueryRef = useRef("");
-
   const [hoveredItem, setHoveredItem] = useState<any>();
   const shinyRef = useRef<HTMLDivElement>(null);
-
+  const [backgroundImage, setBackgroundColor] = useState("");
   const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
-    if (hoveredItem !== null) {
+    if (hoveredItem !== null && shinyRef.current) {
       const gridItem = event.currentTarget.childNodes[hoveredItem];
       // @ts-ignore
       const rect = gridItem?.getBoundingClientRect();
       const x = event.clientX - rect.left;
       const y = event.clientY - rect.top;
+
+      movies.forEach((movie, index) => {
+        if (index !== hoveredItem) return;
+        loadImage(movie.Poster).then((img) => {
+          const c = colorThief.getPalette(img, 30);
+          const rgb = getAvailableBrightest(c).join(", ");
+          // @ts-ignore
+          setBackgroundColor(
+            `radial-gradient( rgba(${rgb}, 0.5) , rgba(${rgb}, 0) , rgba(${rgb}, 0))`,
+          );
+        });
+      });
 
       // @ts-ignore
       shinyRef.current.style.transform = `translate(${x - 300}px, ${y - 300}px)`;
@@ -84,17 +95,6 @@ function Home() {
         >
           {movies.length > 0 &&
             movies.map((movie: MovieData, index) => {
-              let color1 = "rgb(255,255,255,0)";
-              let color2 = "rgb(255,255,255,0)";
-              let color3 = "rgb(255,255,255,0)";
-              loadImage(movie.Poster).then((img) => {
-                const c = colorThief.getPalette(img, 30);
-                color1 = `rgb(${getAvailableBrightest(c).join(",")},0.5)`;
-                color2 = `rgb(${getAvailableBrightest(c).join(",")},0)`;
-                color3 = `rgb(${getAvailableBrightest(c).join(",")},0)`;
-              });
-
-              console.log("Color", color1, color2, color3);
               return (
                 <Link key={movie.imdbID} to={`/${movie.imdbID}`}>
                   <div
@@ -111,9 +111,10 @@ function Home() {
                     />
                     <div>{movie.Title}</div>
                     <div
-                      style={{
-                        backgroundImage: `radial-gradient(${color1}, ${color2}, ${color3})`,
-                      }}
+                      // style={{
+                      //   backgroundImage: `radial-gradient(${color1}, ${color2}, ${color3})`,
+                      // }}
+                      style={{ backgroundImage }}
                       className="shiny-overlay h-[600px] aspect-square  rounded-full"
                       ref={index === hoveredItem ? shinyRef : null}
                     />
