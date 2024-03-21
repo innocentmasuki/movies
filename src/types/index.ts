@@ -1,3 +1,27 @@
+export interface AditionalData {
+  id: string;
+  tmdb_id: number;
+  imdb_id: string;
+  language: string;
+  title: string;
+  url: string;
+  trailer: VideoData;
+  videos: VideoData[];
+}
+
+export interface VideoData {
+  id: string;
+  youtube_video_id: string;
+  youtube_channel_id: string;
+  youtube_thumbnail: string;
+  title: string;
+  thumbnail: string;
+  language: string;
+  categories: string[];
+  published: string; // Ideally you'd use a robust Date type here
+  views: number;
+}
+
 export interface MovieData {
   Title: string;
   Year: string;
@@ -13,6 +37,7 @@ export interface MovieData {
   Country: string;
   Awards: string;
   Poster: string;
+  additional: AditionalData;
   Ratings: Rating[];
   Metascore: string;
   imdbRating: string;

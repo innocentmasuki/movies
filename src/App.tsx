@@ -1,6 +1,6 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Home from "@/pages/Home.tsx";
-import { getMovieByIMDBID, getMovies } from "@/api/movieSdk.ts";
+import { getMovieByIMDBID } from "@/api/movieSdk.ts";
 import Movie from "@/pages/Movie.tsx";
 import { MovieData } from "@/types";
 
@@ -10,7 +10,6 @@ const App = () => {
       path: "/",
       element: <Home />,
       errorElement: <div>error</div>,
-      loader: () => getMovies(),
     },
     {
       path: ":movie",
