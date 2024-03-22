@@ -1,6 +1,3 @@
-// @ts-ignore
-import ColorThief from "colorthief";
-
 export const getAvailableBrightest = (
   colors: number[][],
   intensity = 8,

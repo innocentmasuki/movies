@@ -14,6 +14,7 @@ const App = () => {
     {
       path: ":movie",
       element: <Movie />,
+      errorElement: <div>error</div>,
       loader: async ({ params }): Promise<MovieData> =>
         getMovieByIMDBID(params.movie as `${"tt"}${number}`),
     },

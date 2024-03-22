@@ -21,7 +21,9 @@ const Movie = () => {
     <div className={"h-full w-screen relative bg-black"}>
       <img
         src={movie.Poster}
-        className={"h-screen w-screen object-cover absolute top-0 left-0"}
+        className={
+          "h-screen transform-gpu  w-screen object-cover absolute top-0 left-0"
+        }
         alt={movie.Title}
       />
       <div className={"backdrop-blur fixed top-0 left-0 h-screen w-screen"} />
