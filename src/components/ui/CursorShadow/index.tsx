@@ -4,7 +4,7 @@ import { ForwardedRef, forwardRef } from "react";
 const CursorShadow = forwardRef((_p, ref: ForwardedRef<HTMLDivElement>) => {
   return (
     <div
-      className="bg-hover-background blur z-50 fixed h-[230px] top-0 left-0 aspect-square  rounded-full"
+      className="bg-hover-background blur pointer-events-none  fixed h-[230px] top-0 left-0 aspect-square  rounded-full"
       ref={ref}
     />
   );
