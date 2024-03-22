@@ -1,7 +1,6 @@
 import { Link, useLoaderData, useNavigate } from "react-router-dom";
 import { AditionalData, MovieData } from "@/types";
 import { IoMdStar, IoMdPlay } from "react-icons/io";
-// @ts-ignore
 import ColorThief from "colorthief";
 
 import { getAvailableBrightest, loadImage } from "@/utils/getDominantColor.ts";
@@ -18,7 +17,7 @@ const Movie = () => {
   });
 
   return (
-    <div className={"h-full w-screen relative bg-black"}>
+    <div className={"h-full w-screen relative bg-app-background"}>
       <img
         src={movie.Poster}
         className={
