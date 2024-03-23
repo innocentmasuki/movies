@@ -2,8 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import { setSearchQuery } from "@/redux/slices/searchQuerySlice.ts";
 import { useAppDispatch, useAppSelector } from "@/hooks/storeHooks.ts";
 import { useSearchParams } from "react-router-dom";
-import { IoSearch } from "react-icons/io5";
+import { IoClose, IoSearch } from "react-icons/io5";
 import CursorShadow from "@/components/ui/CursorShadow";
+import icons8Popcorn from "@/assets/icons8-popcorn-100.png";
 
 export const Search = () => {
   const [inputValue, setInputValue] = useState("");
@@ -12,7 +13,6 @@ export const Search = () => {
   const cursorShadowRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const dispatch = useAppDispatch();
-  const [contentType, setContentType] = useState<"movies" | "shows">("movies");
   const searchQuery = useAppSelector((state) => state.searchQuery.value);
   const [searchParams] = useSearchParams();
 
@@ -35,12 +35,17 @@ export const Search = () => {
     console.log("Ref", searchQueryRef.current);
   }, [searchQuery]);
 
-  useEffect(() => {
+  const focusInput = () => {
     if (searchInputRef.current) {
       searchInputRef.current.focus();
     }
+  };
+
+  useEffect(() => {
+    focusInput();
     if (searchParams.get("q")) {
       dispatch(setSearchQuery(searchParams.get("q")!));
+      setInputValue(searchParams.get("q")!);
     }
   }, [searchInputRef.current]);
   const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -48,52 +53,56 @@ export const Search = () => {
       const rect = containerRef.current.getBoundingClientRect();
       const x = event.clientX - rect.left;
       const y = event.clientY - rect.top;
-
       cursorShadowRef.current.style.transform = `translate(${x - 115}px, ${y - 115}px)`;
     }
   };
 
-  const contentTypes = ["movies", "shows"];
-
   return (
-    <nav className={" w-full sticky backdrop-blur z-[60] top-0"}>
+    <nav
+      className={
+        " w-full sticky backdrop-blur bg-black md:bg-transparent items-center justify-between flex flex-row z-[60] top-0"
+      }
+    >
+      <img
+        src={icons8Popcorn}
+        alt={"logo"}
+        className={
+          "md:h-[70px] md:w-[70px] h-[50px] w-[50px] mt-4 object-contain"
+        }
+      />
+
       <div
         onMouseMove={handleMouseMove}
         ref={containerRef}
         className={
-          "flex flex-col-reverse group relative overflow-hidden  gap-3 md:flex-row justify-between bg-black rounded-3xl md:rounded-full md:pl-6 px-4 md:pr-2 py-3 md:py-2 items-center w-full md:w-3/4 mx-auto mt-4 md:my-4 md:mt-8"
+          "flex flex-col-reverse group relative overflow-hidden  gap-3 md:flex-row justify-between  rounded-3xl md:rounded-full  px-2  py-2  items-center w-full md:w-auto  mt-4 md:my-4 md:mt-8"
         }
       >
-        <div className={"flex flex-row z-[90] items-center text-base"}>
-          {contentTypes.map((type) => (
-            <div
-              key={type}
-              onClick={() => setContentType(type as "movies" | "shows")}
-              className={
-                "flex flex-col justify-start cursor-pointer items-center"
-              }
-            >
-              <span className={"text-white font-bold mx-4"}>{type}</span>
-              <div
-                className={`h-1 w-2/3 mt-1 ${type === contentType ? "bg-white" : "bg-transparent"} `}
-              />
-            </div>
-          ))}
-        </div>
         <div
           className={
-            "flex flex-row w-full z-[90] md:w-auto items-center px-2 rounded-2xl md:rounded-full bg-gray-700"
+            "flex flex-row w-full z-[90] md:w-auto items-center px-2 rounded-2xl md:rounded-full bg-gray-800"
           }
         >
           <input
             ref={searchInputRef}
             className={
-              "bg-transparent text-white  pl-3 py-3 w-full md:w-auto outline-none border-none"
+              "bg-transparent text-white  pl-2 py-3 w-full md:w-auto outline-none border-none"
             }
             type={"text"}
+            value={inputValue}
             onChange={(e) => handleSearchQueryChange(e.target.value)}
           />
-          <IoSearch className={"text-white text-2xl mx-2"} />
+          {inputValue ? (
+            <IoClose
+              onClick={() => {
+                handleSearchQueryChange("");
+                focusInput();
+              }}
+              className={"text-white text-2xl mx-2 cursor-pointer"}
+            />
+          ) : (
+            <IoSearch className={"text-white text-2xl mx-2"} />
+          )}
         </div>
         <CursorShadow ref={cursorShadowRef} hasPosition />
       </div>

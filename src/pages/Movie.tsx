@@ -6,6 +6,7 @@ import ColorThief from "colorthief";
 import { getAvailableBrightest, loadImage } from "@/utils/getDominantColor.ts";
 import { useState } from "react";
 import { getLogo } from "@/utils/getRatingIcon.ts";
+import { Helmet } from "react-helmet";
 const Movie = () => {
   const movie = useLoaderData() as MovieData;
   const navigate = useNavigate();
@@ -18,6 +19,13 @@ const Movie = () => {
 
   return (
     <div className={"h-full w-screen relative bg-app-background"}>
+      <Helmet>
+        <title>{movie.Title} - Movie Database</title>
+        <meta name="description" content={movie.Plot} />
+        <meta property="og:title" content={movie.Title} />
+        <meta property="og:image" content={movie.Poster} />
+      </Helmet>
+      <div className={"flex flex-row flex-between"}></div>
       <img
         src={movie.Poster}
         className={
