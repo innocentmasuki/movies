@@ -14,7 +14,6 @@
 }
 
 body {
-    background-color: #D2DCD9;
-    border-color: #121625;
-    background-image: linear-gradient( 68.4deg,  #C691A2 0.5%, #A0A9BA 49%, #D2DCD9 99.8% );
+    background-color: black;
+    /*border: rgba(255, 32, 78, 0.66)*/
 }

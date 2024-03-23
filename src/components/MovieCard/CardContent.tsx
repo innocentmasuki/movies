@@ -1,18 +1,16 @@
 import { MovieData } from "@/types";
 
-const MovieCard = ({ movie }: { movie: MovieData }) => {
+const CardContent = ({ movie }: { movie: MovieData }) => {
   return (
-    <div
-      className={
-        "h-full w-full z-50 cursor-pointer flex flex-col gap-4 overflow-hidden"
-      }
-    >
+    <div className={"h-full w-full p-2 z-30 flex flex-col gap-4"}>
       <img
         src={movie.Poster}
-        className={"w-full h-[200px] object-cover rounded-2xl"}
+        className={"w-full h-[200px] object-cover rounded-xl"}
         alt={movie.Poster}
       />
-      <div className={"flex flex-col gap-1 justify-between items-start w-full"}>
+      <div
+        className={"flex flex-col gap- pb-1 justify-between items-start w-full"}
+      >
         <span
           className={
             "text-white font-semibold font-montserrat  line-clamp-1 text-xs"
@@ -27,5 +25,4 @@ const MovieCard = ({ movie }: { movie: MovieData }) => {
     </div>
   );
 };
-
-export default MovieCard;
+export default CardContent;

@@ -7,10 +7,6 @@ module.exports = {
       fontFamily: {
         montserrat: ["Montserrat", "sans-serif"],
       },
-      backgroundImage: {
-        "hover-background":
-          "radial-gradient( rgba(255,255,255, 0.5) , transparent , transparent)",
-      },
     },
   },
   plugins: [],

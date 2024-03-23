@@ -11,8 +11,8 @@ const Movie = () => {
   const navigate = useNavigate();
   const colorThief = new ColorThief();
   const [color, setColor] = useState("rgb(255,255,255)");
-  loadImage(movie.Poster).then((img) => {
-    const c = colorThief.getPalette(img, 30);
+  loadImage(movie.Poster).then(async (img) => {
+    const c = await colorThief.getPalette(img, 30);
     setColor(`rgb(${getAvailableBrightest(c).join(",")})`);
   });
 
@@ -89,15 +89,21 @@ const Movie = () => {
                       </div>
                     );
                   })}
-                  <span className={" text-center hidden md:block ml-10"}>
+                  <span
+                    style={{ color }}
+                    className={" text-center hidden md:block ml-10"}
+                  >
                     {movie.Runtime}
                   </span>
                 </div>
                 <span className={" text-center md:hidden"}>
                   {movie.Runtime}
                 </span>
-                <div className={"flex flex-row gap-1 items-center"}>
-                  <IoMdStar className={"text-yellow-400 text-[24px]"} />
+                <div
+                  style={{ color }}
+                  className={"flex flex-row gap-1 items-center"}
+                >
+                  {<IoMdStar className={"text-yellow-400 text-[24px]"} />}
                   {movie.imdbVotes}
                 </div>
               </div>
