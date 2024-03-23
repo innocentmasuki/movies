@@ -1,11 +1,9 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { MovieData } from "@/types";
-import { IoMdStar } from "react-icons/io";
 import ColorThief from "colorthief";
 
 import { getAvailableBrightest, loadImage } from "@/utils/getDominantColor.ts";
 import { useEffect, useState } from "react";
-import { getLogo } from "@/utils/getRatingIcon.ts";
 import { Helmet } from "react-helmet";
 import { setViewedMovies } from "@/redux/slices/viewedMoviesSlice.ts";
 import { useAppDispatch, useAppSelector } from "@/hooks/storeHooks.ts";
@@ -13,6 +11,10 @@ import Plot from "@/components/molecules/Plot";
 import Logo from "@/components/atoms/Logo";
 import { getMovieByIMDBID } from "@/api/movieSdk.ts";
 import Button from "@/components/atoms/Button";
+import MovieDetails from "@/components/molecules/Movies/MovieDetails.tsx";
+import MovieHeader from "@/components/molecules/Movies/MovieHeader.tsx";
+import MovieGenre from "@/components/molecules/Movies/MovieGenre.tsx";
+import MovieActors from "@/components/molecules/Movies/MovieActors.tsx";
 const Movie = () => {
   const dispatch = useAppDispatch();
   const viewedMovies = useAppSelector((state) => state.viewedMovies.value);
@@ -56,102 +58,30 @@ const Movie = () => {
 
       <img
         src={movie?.Poster}
-        className={
-          "h-screen transform-gpu  w-screen object-cover absolute top-0 left-0"
-        }
+        className={"h-screen w-screen object-cover absolute top-0 left-0"}
         alt={movie?.Title}
       />
       <div className={"backdrop-blur fixed top-0 left-0 h-screen w-screen"} />
       <div className="fixed overflow-y-auto top-0 left-0 h-screen w-screen  bg-gradient-to-b from-transparent via-black/75  to-black">
-        <div className="">
+        <div
+          className={
+            "flex flex-col gap-4 md:gap-6 h-screen  pb-4  md:justify-start"
+          }
+        >
           <div
             className={
-              "flex flex-col gap-4 md:gap-6 h-screen  pb-4  md:justify-start"
+              "flex flex-row w-full items-center px-4 md:px-10 pt-4 pb-3 bg-black md:bg-transparent sticky top-0 backdrop-blur justify-between"
             }
           >
-            <div
-              className={
-                "flex flex-row w-full items-center px-4 md:px-10 pt-4 pb-3 bg-black md:bg-transparent sticky top-0 backdrop-blur justify-between"
-              }
-            >
-              <Button onClick={() => navigate(-1)} text={"Back"} />
-              <Logo />
-            </div>
-            <div className={"flex flex-col md:px-10 px-4 gap-5"}>
-              <div
-                className={
-                  "flex flex-row justify-center md:justify-start duration-75"
-                }
-              >
-                <img
-                  src={movie?.Poster}
-                  className={"h-[400px] aspect-auto object-cover "}
-                  alt={movie?.Title}
-                />
-              </div>
-
-              <div className={"flex flex-col md:items-start items-center "}>
-                <span
-                  className={"border-2  rounded-full px-4 py-[2px]"}
-                  style={{ color, borderColor: color }}
-                >
-                  {movie?.Rated}
-                </span>
-                <div
-                  style={{ color }}
-                  className={`text-4xl md:text-6xl mt-4 text-center md:text-left  font-montserrat font-semibold`}
-                >
-                  {movie?.Title}
-                </div>
-              </div>
-              <div
-                className={
-                  "flex flex-col  text-gray-400  md:flex-row justify-between gap-6 items-center"
-                }
-              >
-                <div
-                  className={
-                    "flex flex-row items-center justify-center md:justify-start gap-4"
-                  }
-                >
-                  {movie?.Ratings.map((rating, index) => {
-                    if (!getLogo(rating.Source)) return;
-                    return (
-                      <div
-                        key={index}
-                        className={"flex flex-row items-center gap-2"}
-                      >
-                        <img
-                          alt={""}
-                          src={getLogo(rating.Source)}
-                          className={"h-[20px] aspect-auto object-fit "}
-                        />
-                        <span style={{ color, borderColor: color }}>
-                          {rating.Value}
-                        </span>
-                      </div>
-                    );
-                  })}
-                  <span
-                    style={{ color }}
-                    className={" text-center hidden md:block ml-10"}
-                  >
-                    {movie?.Runtime}
-                  </span>
-                </div>
-                <span className={" text-center md:hidden"}>
-                  {movie?.Runtime}
-                </span>
-                <div
-                  style={{ color }}
-                  className={"flex flex-row gap-1 items-center"}
-                >
-                  {<IoMdStar className={"text-yellow-400 text-[24px]"} />}
-                  {movie?.imdbVotes}
-                </div>
-              </div>
-              <Plot plot={movie?.Plot} />
-            </div>
+            <Button onClick={() => navigate(-1)} text={"Back"} />
+            <Logo />
+          </div>
+          <div className={"flex flex-col md:px-10 px-4 gap-5"}>
+            <MovieHeader movie={movie!} color={color} />
+            <MovieDetails movie={movie!} color={color} />
+            <MovieGenre genre={movie?.Genre} />
+            <MovieActors actors={movie?.Actors} />
+            <Plot plot={movie?.Plot} />
           </div>
         </div>
       </div>
