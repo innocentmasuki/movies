@@ -2,9 +2,11 @@
 
 This project is a showcase of a movies database. It is a simple web application that allows users to view list and details of movies
 
-To start the project, run the project after cloning the repository. The project is built using React amd Electon JS with Vite as the bundler.
+The project is built using React and Electon JS with Vite as the bundler.
 
-## Installation
+To start the project, run following commands after cloning the repository. 
+
+## Steps
 
 1. Clone the repository
 2. Run `yarn install` to install the dependencies
