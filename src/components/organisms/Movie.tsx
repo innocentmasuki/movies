@@ -76,12 +76,22 @@ const Movie = () => {
             <Button onClick={() => navigate(-1)} text={"Back"} />
             <Logo />
           </div>
-          <div className={"flex flex-col md:px-10 px-4 gap-5"}>
-            <MovieHeader movie={movie!} color={color} />
-            <MovieDetails movie={movie!} color={color} />
-            <MovieGenre genre={movie?.Genre} />
-            <MovieActors actors={movie?.Actors} />
-            <Plot plot={movie?.Plot} />
+          <div
+            className={`flex w-full h-full ${!movie && "justify-center items-center"} flex-col md:px-10 px-4 gap-5`}
+          >
+            {!movie ? (
+              <div style={{ color }} className={"font-semibold"}>
+                Loading...
+              </div>
+            ) : (
+              <>
+                <MovieHeader movie={movie!} color={color} />
+                <MovieDetails movie={movie!} color={color} />
+                <MovieGenre genre={movie?.Genre} />
+                <MovieActors actors={movie?.Actors} />
+                <Plot plot={movie?.Plot} />
+              </>
+            )}
           </div>
         </div>
       </div>

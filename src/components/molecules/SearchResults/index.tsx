@@ -8,7 +8,7 @@ const SearchResults = () => {
   return (
     <div>
       <h1 className={"text-white text-2xl font-bold my-4 md:my-6 md:text-3xl"}>
-        Results for: {searchQuery}
+        {searchResults.length} results for: {searchQuery}
       </h1>
       <Movies movies={searchResults} smallCards listView />
     </div>
