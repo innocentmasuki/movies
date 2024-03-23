@@ -1,6 +1,6 @@
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { AditionalData, MovieData } from "@/types";
-import { IoMdStar, IoMdPlay } from "react-icons/io";
+import { useNavigate, useParams } from "react-router-dom";
+import { MovieData } from "@/types";
+import { IoMdStar } from "react-icons/io";
 import ColorThief from "colorthief";
 
 import { getAvailableBrightest, loadImage } from "@/utils/getDominantColor.ts";
@@ -151,10 +151,6 @@ const Movie = () => {
                 </div>
               </div>
               <Plot plot={movie?.Plot} />
-
-              {movie?.additional.trailer?.youtube_video_id && (
-                <WatchTrailer data={movie?.additional} />
-              )}
             </div>
           </div>
         </div>
@@ -164,32 +160,3 @@ const Movie = () => {
 };
 
 export default Movie;
-
-const WatchTrailer = ({ data }: { data: AditionalData }) => {
-  return (
-    <div
-      className={
-        "flex flex-row justify-center md:justify-start gap-4 mb-0 md:mb-10"
-      }
-    >
-      <Link to={`https://youtu.be/${data.trailer?.youtube_video_id}`}>
-        <button
-          className={
-            "flex flex-row items-center px-4 py-2 rounded-full border-2 gap-2 bg-white border-transparent duration-75  text-black hover:bg-black hover:text-white hover:border-white"
-          }
-        >
-          Trailer <IoMdPlay />
-        </button>
-      </Link>
-      <Link to={`https://imdb.com/title/${data.trailer?.youtube_video_id}`}>
-        <button
-          className={
-            "flex flex-row items-center px-4 py-2 border-2 duration-75 border-transparent rounded-full gap-2 text-white hover:border-white"
-          }
-        >
-          More Info
-        </button>
-      </Link>
-    </div>
-  );
-};

@@ -10,10 +10,12 @@ const MovieCard = forwardRef(
       index,
       hoveredItem,
       setHoveredItem,
+      smallCards,
     }: {
       hoveredItem?: number | null;
       movie: MovieData;
       index: number;
+      smallCards: boolean;
       setHoveredItem: (index: number | null) => void;
     },
     ref,
@@ -22,11 +24,9 @@ const MovieCard = forwardRef(
       <div
         onMouseEnter={() => setHoveredItem(index)}
         onMouseLeave={() => setHoveredItem(null)}
-        className={
-          "h-full w-full z-50  relative cursor-pointer rounded-2xl flex flex-col gap-4 overflow-hidden group"
-        }
+        className={`h-full w-full z-50  relative cursor-pointer rounded-2xl flex ${smallCards ? "flex-row" : "flex-col"} gap-4 overflow-hidden group`}
       >
-        <CardContent movie={movie} />
+        <CardContent movie={movie} smallCards={smallCards} />
         <CursorShadow ref={index === hoveredItem ? (ref as never) : null} />
       </div>
     );

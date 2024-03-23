@@ -45,7 +45,7 @@ export const searchMovies = async (query: string): Promise<MovieData[]> => {
   );
   const data = await response.json();
   if (data.Search && data.Search.length > 0) {
-    return data;
+    return data.Search;
   }
   throw new Error("Error fetching data");
 };
@@ -59,15 +59,10 @@ export const getMovieByIMDBID = async (
   const response = await fetch(
     `${BASE_URL}?i=${imdbID}&apikey=bbb23874&type=${type}&plot=full`,
   );
-  let additional = {};
-  getAdditionalDataByIMDBID(imdbID, type === "movie" ? "movies" : "shows").then(
-    (data) => {
-      additional = data;
-    },
-  );
+
   const data = await response.json();
   if (Object.keys(data).length > 0) {
-    return { ...data, additional };
+    return data;
   }
   throw new Error("Error fetching data");
 };

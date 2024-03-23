@@ -17,6 +17,7 @@ export const Search = () => {
   const dispatch = useAppDispatch();
   const searchQuery = useAppSelector((state) => state.searchQuery.value);
   const [searchParams] = useSearchParams();
+  const currentSearch = useRef(searchQuery);
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
@@ -32,13 +33,17 @@ export const Search = () => {
   };
 
   const search = useCallback(() => {
+    dispatch(setSearchResult([]));
     searchMovies(searchQuery).then((data) => dispatch(setSearchResult(data)));
-  }, [dispatch]);
+  }, [dispatch, searchQuery]);
 
   useEffect(() => {
     if (searchQuery.trim() === "") return;
-    search();
-  }, [searchQuery]);
+    if (searchQuery !== currentSearch.current) {
+      search();
+      currentSearch.current = searchQuery;
+    }
+  }, [search, searchQuery]);
 
   const focusInput = () => {
     if (searchInputRef.current) {

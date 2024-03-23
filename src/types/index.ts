@@ -37,7 +37,6 @@ export interface MovieData {
   Country: string;
   Awards: string;
   Poster: string;
-  additional: AditionalData;
   Ratings: Rating[];
   Metascore: string;
   imdbRating: string;

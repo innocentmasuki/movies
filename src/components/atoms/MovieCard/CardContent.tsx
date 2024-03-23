@@ -1,24 +1,32 @@
 import { MovieData } from "@/types";
 
-const CardContent = ({ movie }: { movie: MovieData }) => {
+const CardContent = ({
+  movie,
+  smallCards,
+}: {
+  movie: MovieData;
+  smallCards: boolean;
+}) => {
   return (
-    <div className={"h-full w-full p-2 z-30 flex flex-col gap-4"}>
+    <div
+      className={`h-full w-full p-2 z-30 flex ${smallCards ? "flex-row" : "flex-col"} gap-4`}
+    >
       <img
         src={movie.Poster}
-        className={"w-full h-[200px] object-cover rounded-xl"}
+        className={` ${smallCards ? "min-w-[200px] max-w-[200px] max-h-[100px] min-h-[100px]" : "w-full max-h-[200px] min-h-[200px]"}  object-cover rounded-xl bg-gray-800`}
         alt={movie.Poster}
       />
       <div
-        className={"flex flex-col gap- pb-1 justify-between items-start w-full"}
+        className={`flex flex-col gap- pb-1 ${smallCards ? "justify-start" : "justify-between"}  items-start w-full`}
       >
         <span
-          className={
-            "text-white font-semibold font-montserrat  line-clamp-1 text-xs"
-          }
+          className={`text-white font-semibold font-montserrat ${smallCards ? "text-xl  line-clamp-2" : "text-xs  line-clamp-1 "}`}
         >
           {movie.Title}
         </span>
-        <span className={"text-white font-montserrat text-xs"}>
+        <span
+          className={`text-white font-montserrat ${smallCards ? "text-l" : "text-xs"}`}
+        >
           {movie.Year}
         </span>
       </div>

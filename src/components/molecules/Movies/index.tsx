@@ -3,7 +3,15 @@ import { Link } from "react-router-dom";
 import MovieCard from "@/components/atoms/MovieCard/MovieCard.tsx";
 import { useRef, useState } from "react";
 
-const Movies = ({ movies }: { movies: MovieData[] }) => {
+const Movies = ({
+  movies,
+  smallCards = false,
+  listView = false,
+}: {
+  movies: MovieData[];
+  smallCards?: boolean;
+  listView?: boolean;
+}) => {
   const [hoveredItem, setHoveredItem] = useState<number | null>();
   const shinyRef = useRef<HTMLDivElement>(null);
   const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -20,7 +28,9 @@ const Movies = ({ movies }: { movies: MovieData[] }) => {
     <section
       onMouseMove={handleMouseMove}
       className={
-        "w-full gap-x-5 gap-y-10 group grid py-4 grid-cols-2 md:grid-cols-5"
+        !listView
+          ? "w-full gap-x-5 gap-y-10 group grid py-4 grid-cols-2 md:grid-cols-5"
+          : "w-full flex-col gap-4"
       }
     >
       {movies.length > 0 &&
@@ -28,6 +38,7 @@ const Movies = ({ movies }: { movies: MovieData[] }) => {
           return (
             <Link key={movie.imdbID} to={`/${movie.imdbID}`}>
               <MovieCard
+                smallCards={smallCards}
                 ref={shinyRef}
                 setHoveredItem={setHoveredItem}
                 hoveredItem={hoveredItem}
