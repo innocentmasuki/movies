@@ -1,7 +1,7 @@
 import { MovieData } from "@/types";
 import { forwardRef } from "react";
-import CursorShadow from "@/components/ui/CursorShadow";
-import CardContent from "@/components/MovieCard/CardContent.tsx";
+import CursorShadow from "@/components/atoms/CursorShadow";
+import CardContent from "./CardContent.tsx";
 
 const MovieCard = forwardRef(
   (

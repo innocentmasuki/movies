@@ -39,7 +39,7 @@ export const getMovies = async (): Promise<MovieData[]> => {
   throw new Error("Error fetching data");
 };
 
-export const searchMovie = async (query: string): Promise<MovieData[]> => {
+export const searchMovies = async (query: string): Promise<MovieData[]> => {
   const response = await fetch(
     `${BASE_URL}?s=${query}&apikey=bbb23874&type=movie`,
   );

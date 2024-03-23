@@ -1,10 +1,12 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { setSearchQuery } from "@/redux/slices/searchQuerySlice.ts";
 import { useAppDispatch, useAppSelector } from "@/hooks/storeHooks.ts";
 import { useSearchParams } from "react-router-dom";
 import { IoClose, IoSearch } from "react-icons/io5";
-import CursorShadow from "@/components/ui/CursorShadow";
-import icons8Popcorn from "@/assets/icons8-popcorn-100.png";
+import CursorShadow from "@/components/atoms/CursorShadow";
+import Logo from "@/components/atoms/Logo";
+import { searchMovies } from "@/api/movieSdk.ts";
+import { setSearchResult } from "@/redux/slices/searchResultsSlice.ts";
 
 export const Search = () => {
   const [inputValue, setInputValue] = useState("");
@@ -20,19 +22,22 @@ export const Search = () => {
     const timeoutId = setTimeout(() => {
       dispatch(setSearchQuery(inputValue));
       searchQueryRef.current = inputValue;
-    }, 700);
+    }, 800);
     return () => clearTimeout(timeoutId);
-  }, [inputValue, 700]);
+  }, [inputValue, dispatch]);
 
   const handleSearchQueryChange = (query: string) => {
     setInputValue(query);
     window.history.replaceState({}, "", `?q=${query}`);
   };
 
+  const search = useCallback(() => {
+    searchMovies(searchQuery).then((data) => dispatch(setSearchResult(data)));
+  }, [dispatch]);
+
   useEffect(() => {
-    if (searchQuery === "" || searchQuery === searchQueryRef.current) return;
-    console.log("Query", searchQuery);
-    console.log("Ref", searchQueryRef.current);
+    if (searchQuery.trim() === "") return;
+    search();
   }, [searchQuery]);
 
   const focusInput = () => {
@@ -47,7 +52,7 @@ export const Search = () => {
       dispatch(setSearchQuery(searchParams.get("q")!));
       setInputValue(searchParams.get("q")!);
     }
-  }, [searchInputRef.current]);
+  }, [dispatch]);
   const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
     if (cursorShadowRef.current && containerRef.current) {
       const rect = containerRef.current.getBoundingClientRect();
@@ -63,14 +68,7 @@ export const Search = () => {
         " w-full sticky backdrop-blur bg-black md:bg-transparent items-center justify-between flex flex-row z-[60] top-0"
       }
     >
-      <img
-        src={icons8Popcorn}
-        alt={"logo"}
-        className={
-          "md:h-[70px] md:w-[70px] h-[50px] w-[50px] mt-4 object-contain"
-        }
-      />
-
+      <Logo className={"mt-4"} />
       <div
         onMouseMove={handleMouseMove}
         ref={containerRef}

@@ -1,6 +1,6 @@
 import { MovieData } from "@/types";
 import { Link } from "react-router-dom";
-import MovieCard from "@/components/MovieCard/MovieCard.tsx";
+import MovieCard from "@/components/atoms/MovieCard/MovieCard.tsx";
 import { useRef, useState } from "react";
 
 const Movies = ({ movies }: { movies: MovieData[] }) => {

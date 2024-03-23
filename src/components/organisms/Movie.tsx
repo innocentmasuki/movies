@@ -1,57 +1,92 @@
-import { Link, useLoaderData, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { AditionalData, MovieData } from "@/types";
 import { IoMdStar, IoMdPlay } from "react-icons/io";
 import ColorThief from "colorthief";
 
 import { getAvailableBrightest, loadImage } from "@/utils/getDominantColor.ts";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getLogo } from "@/utils/getRatingIcon.ts";
 import { Helmet } from "react-helmet";
+import { setViewedMovies } from "@/redux/slices/viewedMoviesSlice.ts";
+import { useAppDispatch, useAppSelector } from "@/hooks/storeHooks.ts";
+import Plot from "@/components/molecules/Plot";
+import Logo from "@/components/atoms/Logo";
+import { getMovieByIMDBID } from "@/api/movieSdk.ts";
+import Button from "@/components/atoms/Button";
 const Movie = () => {
-  const movie = useLoaderData() as MovieData;
+  const dispatch = useAppDispatch();
+  const viewedMovies = useAppSelector((state) => state.viewedMovies.value);
   const navigate = useNavigate();
   const colorThief = new ColorThief();
+  const [movie, setMovie] = useState<MovieData | undefined>();
+
+  const { imdbID } = useParams();
   const [color, setColor] = useState("rgb(255,255,255)");
-  loadImage(movie.Poster).then(async (img) => {
-    const c = await colorThief.getPalette(img, 30);
-    setColor(`rgb(${getAvailableBrightest(c).join(",")})`);
-  });
+
+  if (movie) {
+    loadImage(movie?.Poster).then(async (img) => {
+      const c = await colorThief.getPalette(img, 30);
+      setColor(`rgb(${getAvailableBrightest(c).join(",")})`);
+    });
+  }
+
+  useEffect(() => {
+    if (imdbID) {
+      if (viewedMovies.some((movie) => movie?.imdbID === imdbID)) {
+        setMovie(viewedMovies.find((movie) => movie?.imdbID === imdbID)!);
+        return;
+      }
+      getMovieByIMDBID(imdbID as `${"tt"}${number}`).then((data) => {
+        setMovie(data);
+        dispatch(setViewedMovies([...viewedMovies, data]));
+      });
+    }
+  }, [dispatch, imdbID, viewedMovies]);
 
   return (
     <div className={"h-full w-screen relative bg-app-background"}>
-      <Helmet>
-        <title>{movie.Title} - Movie Database</title>
-        <meta name="description" content={movie.Plot} />
-        <meta property="og:title" content={movie.Title} />
-        <meta property="og:image" content={movie.Poster} />
-      </Helmet>
-      <div className={"flex flex-row flex-between"}></div>
+      {movie && (
+        <Helmet>
+          <title>{movie.Title} - Movie Database</title>
+          <meta name="description" content={movie.Plot} />
+          <meta property="og:title" content={movie.Title} />
+          <meta property="og:image" content={movie.Poster} />
+        </Helmet>
+      )}
+
       <img
-        src={movie.Poster}
+        src={movie?.Poster}
         className={
           "h-screen transform-gpu  w-screen object-cover absolute top-0 left-0"
         }
-        alt={movie.Title}
+        alt={movie?.Title}
       />
       <div className={"backdrop-blur fixed top-0 left-0 h-screen w-screen"} />
       <div className="fixed overflow-y-auto top-0 left-0 h-screen w-screen  bg-gradient-to-b from-transparent via-black/75  to-black">
         <div className="">
           <div
             className={
-              "flex flex-col gap-4 md:gap-6 h-screen p-4 md:px-10 md:justify-between"
+              "flex flex-col gap-4 md:gap-6 h-screen  pb-4  md:justify-start"
             }
           >
-            <button onClick={() => navigate(-1)}>Go Back</button>
-            <div className={"flex flex-col gap-5"}>
+            <div
+              className={
+                "flex flex-row w-full items-center px-4 md:px-10 pt-4 pb-3 bg-black md:bg-transparent sticky top-0 backdrop-blur justify-between"
+              }
+            >
+              <Button onClick={() => navigate(-1)} text={"Back"} />
+              <Logo />
+            </div>
+            <div className={"flex flex-col md:px-10 px-4 gap-5"}>
               <div
                 className={
                   "flex flex-row justify-center md:justify-start duration-75"
                 }
               >
                 <img
-                  src={movie.Poster}
+                  src={movie?.Poster}
                   className={"h-[400px] aspect-auto object-cover "}
-                  alt={movie.Title}
+                  alt={movie?.Title}
                 />
               </div>
 
@@ -60,13 +95,13 @@ const Movie = () => {
                   className={"border-2  rounded-full px-4 py-[2px]"}
                   style={{ color, borderColor: color }}
                 >
-                  {movie.Rated}
+                  {movie?.Rated}
                 </span>
                 <div
                   style={{ color }}
                   className={`text-4xl md:text-6xl mt-4 text-center md:text-left  font-montserrat font-semibold`}
                 >
-                  {movie.Title}
+                  {movie?.Title}
                 </div>
               </div>
               <div
@@ -79,7 +114,7 @@ const Movie = () => {
                     "flex flex-row items-center justify-center md:justify-start gap-4"
                   }
                 >
-                  {movie.Ratings.map((rating, index) => {
+                  {movie?.Ratings.map((rating, index) => {
                     if (!getLogo(rating.Source)) return;
                     return (
                       <div
@@ -101,24 +136,24 @@ const Movie = () => {
                     style={{ color }}
                     className={" text-center hidden md:block ml-10"}
                   >
-                    {movie.Runtime}
+                    {movie?.Runtime}
                   </span>
                 </div>
                 <span className={" text-center md:hidden"}>
-                  {movie.Runtime}
+                  {movie?.Runtime}
                 </span>
                 <div
                   style={{ color }}
                   className={"flex flex-row gap-1 items-center"}
                 >
                   {<IoMdStar className={"text-yellow-400 text-[24px]"} />}
-                  {movie.imdbVotes}
+                  {movie?.imdbVotes}
                 </div>
               </div>
-              <Plot plot={movie.Plot} />
+              <Plot plot={movie?.Plot} />
 
-              {movie.additional.trailer?.youtube_video_id && (
-                <WatchTrailer data={movie.additional} />
+              {movie?.additional.trailer?.youtube_video_id && (
+                <WatchTrailer data={movie?.additional} />
               )}
             </div>
           </div>
@@ -129,25 +164,6 @@ const Movie = () => {
 };
 
 export default Movie;
-
-const Plot = ({ plot }: { plot: string }) => {
-  const [showMore, setShowMore] = useState(false);
-  return (
-    <span className={"text-gray-400 mb-10 text-center md:text-left"}>
-      <span
-        className={`text-gray-400 text-center md:text-left ${!showMore ? "line-clamp-2" : ""}`}
-      >
-        {plot}
-      </span>
-      <span
-        onClick={() => setShowMore(!showMore)}
-        className={"text-white cursor-pointer"}
-      >
-        {showMore ? "Show Less" : "Show More"}
-      </span>
-    </span>
-  );
-};
 
 const WatchTrailer = ({ data }: { data: AditionalData }) => {
   return (

@@ -2,16 +2,18 @@ import { useAppDispatch, useAppSelector } from "@/hooks/storeHooks.ts";
 import { useCallback, useEffect } from "react";
 import { getMovies } from "@/api/movieSdk.ts";
 import { setMovies } from "@/redux/slices/moviesSlice.ts";
-import Movies from "@/components/sections/Movies";
-import Search from "@/components/sections/Search";
+import Movies from "@/components/molecules/Movies";
+import Search from "@/components/molecules/Search";
 import { Helmet } from "react-helmet";
 import icons8Popcorn from "@/assets/icons8-popcorn-100.png";
+import SearchResults from "@/components/molecules/SearchResults";
 
 function Home() {
   const dispatch = useAppDispatch();
   const movies = useAppSelector((state) => state.movies.value);
+  const searchQuery = useAppSelector((state) => state.searchQuery.value);
 
-  const fetchMovies = useCallback(async () => {
+  const fetchMovies = useCallback(() => {
     getMovies().then((data) => dispatch(setMovies(data)));
   }, [dispatch]);
 
@@ -34,7 +36,7 @@ function Home() {
       </Helmet>
       <div className={" flex px-4 pb-6 flex-col gap-1 mx-auto md:max-w-5xl"}>
         <Search />
-        <Movies movies={movies} />
+        {searchQuery ? <SearchResults /> : <Movies movies={movies} />}
       </div>
     </div>
   );
