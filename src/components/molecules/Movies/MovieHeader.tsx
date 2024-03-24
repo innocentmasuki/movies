@@ -9,7 +9,7 @@ const MovieHeader = ({ color, movie }: { color: string; movie: MovieData }) => {
         <img
           src={movie?.Poster}
           className={"h-[400px] aspect-auto object-cover "}
-          alt={movie?.Title}
+          alt={movie?.Title + " poster"}
         />
       </div>
 

@@ -14,7 +14,7 @@ const CardContent = ({
       <img
         src={movie.Poster}
         className={` ${smallCards ? "min-w-[200px] max-w-[200px] max-h-[100px] min-h-[100px]" : "w-full max-h-[200px] min-h-[200px]"}  object-cover rounded-xl bg-gray-800`}
-        alt={movie.Poster}
+        alt={movie.Title + " poster"}
       />
       <div
         className={`flex flex-col gap- pb-1 ${smallCards ? "justify-start" : "justify-between"}  items-start w-full`}
