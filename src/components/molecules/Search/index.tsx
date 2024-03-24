@@ -83,28 +83,40 @@ export const Search = () => {
       >
         <div
           className={
-            "flex flex-row w-full z-[90] md:w-auto items-center px-2 rounded-2xl md:rounded-full bg-gray-800"
+            "flex flex-col w-full z-[90] md:w-auto items-start px-2 rounded-2xl md:rounded-full bg-gray-800"
           }
         >
-          <input
-            ref={searchInputRef}
-            className={
-              "bg-transparent text-white  pl-2 py-3 w-full md:w-auto outline-none border-none"
-            }
-            type={"text"}
-            value={inputValue}
-            onChange={(e) => handleSearchQueryChange(e.target.value)}
-          />
-          {inputValue ? (
-            <IoClose
-              onClick={() => {
-                handleSearchQueryChange("");
-                focusInput();
-              }}
-              className={"text-white text-2xl mx-2 cursor-pointer"}
+          <div className={"flex flex-row w-full items-center"}>
+            <input
+              ref={searchInputRef}
+              className={
+                "bg-transparent text-white  pl-2 py-3 w-full md:w-auto outline-none border-none"
+              }
+              type={"text"}
+              role={"search"}
+              value={inputValue}
+              placeholder={"Search for movies..."}
+              onChange={(e) => handleSearchQueryChange(e.target.value)}
             />
-          ) : (
-            <IoSearch className={"text-white text-2xl mx-2"} />
+            {inputValue ? (
+              <IoClose
+                onClick={() => {
+                  handleSearchQueryChange("");
+                  focusInput();
+                }}
+                className={"text-white text-2xl mx-2 cursor-pointer"}
+              />
+            ) : (
+              <IoSearch className={"text-white text-2xl mx-2"} />
+            )}
+          </div>
+          {inputValue.trim().length > 0 && inputValue.trim().length <= 2 && (
+            <span
+              role={"note"}
+              className={"text-[9px] text-gray-300 pb-1 pl-2"}
+            >
+              Minimum 3 characters
+            </span>
           )}
         </div>
         <CursorShadow ref={cursorShadowRef} hasPosition />

@@ -36,7 +36,11 @@ function Home() {
       </Helmet>
       <div className={" flex px-4 pb-6 flex-col gap-1 mx-auto md:max-w-5xl"}>
         <Search />
-        {searchQuery ? <SearchResults /> : <Movies movies={movies} />}
+        {searchQuery.trim().length >= 3 ? (
+          <SearchResults />
+        ) : (
+          <Movies movies={movies} />
+        )}
       </div>
     </div>
   );
